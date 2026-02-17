@@ -1,5 +1,3 @@
-/* ======================== */
-/* ELEMENTOS */
 const descricaoInput = document.getElementById("descricao");
 const valorInput = document.getElementById("valor");
 const tipoSelect = document.getElementById("tipo");
@@ -7,17 +5,11 @@ const lista = document.getElementById("lista");
 const saldoEl = document.getElementById("saldo");
 const bgVideo = document.getElementById("bg-video");
 
-/* ======================== */
-/* LOCAL STORAGE */
 let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
 
-/* ======================== */
-/* INICIALIZA */
 renderizar();
 iniciarVideo();
 
-/* ======================== */
-/* ADICIONAR */
 function adicionar(event) {
   event.preventDefault();
 
@@ -25,14 +17,9 @@ function adicionar(event) {
   const valor = Number(valorInput.value);
   const tipo = tipoSelect.value;
 
-  if (descricao === "" || valor <= 0) return;
+  if (!descricao || valor <= 0) return;
 
-  transacoes.push({
-    descricao,
-    valor,
-    tipo
-  });
-
+  transacoes.push({ descricao, valor, tipo });
   salvar();
   renderizar();
 
@@ -41,8 +28,6 @@ function adicionar(event) {
   tipoSelect.value = "entrada";
 }
 
-/* ======================== */
-/* RENDERIZAR */
 function renderizar() {
   lista.innerHTML = "";
   let saldo = 0;
@@ -60,13 +45,13 @@ function renderizar() {
 
     if (item.tipo === "entrada") {
       saldo += item.valor;
-      li.innerText = `➕ ${item.descricao} — ${valorFormatado}`;
+      li.textContent = `➕ ${item.descricao} — ${valorFormatado}`;
     } else {
       saldo -= item.valor;
-      li.innerText = `➖ ${item.descricao} — ${valorFormatado}`;
+      li.textContent = `➖ ${item.descricao} — ${valorFormatado}`;
     }
 
-    btn.innerText = "🗑️";
+    btn.textContent = "🗑️";
     btn.onclick = () => {
       transacoes.splice(index, 1);
       salvar();
@@ -77,26 +62,18 @@ function renderizar() {
     lista.appendChild(li);
   });
 
-  saldoEl.innerText = saldo.toLocaleString("pt-BR", {
+  saldoEl.textContent = saldo.toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL"
   });
 }
 
-/* ======================== */
-/* SALVAR */
 function salvar() {
   localStorage.setItem("transacoes", JSON.stringify(transacoes));
 }
 
-/* ======================== */
-/* VÍDEO DE FUNDO */
 function iniciarVideo() {
- const videos = [
-  "./Videos/money1.mp4"
-];
-
-const bgVideo = document.getElementById("bg-video");
-
-const videoAleatorio = Math.floor(Math.random() * videos.length);
-bgVideo.src = videos[videoAleatorio];
+  const videos = ["./Videos/money1.mp4"];
+  const videoAleatorio = Math.floor(Math.random() * videos.length);
+  bgVideo.src = videos[videoAleatorio];
+}
