@@ -92,11 +92,11 @@ function salvar() {
 /* ======================== */
 /* VÍDEO DE FUNDO */
 function iniciarVideo() {
-  const videos = [
-    "videos/money1.mp4"
-    // depois você pode adicionar mais aqui
-  ];
+ const videos = [
+  "./Videos/money1.mp4"
+];
 
-  const videoAleatorio = Math.floor(Math.random() * videos.length);
-  bgVideo.src = videos[videoAleatorio];
-}
+const bgVideo = document.getElementById("bg-video");
+
+const videoAleatorio = Math.floor(Math.random() * videos.length);
+bgVideo.src = videos[videoAleatorio];
