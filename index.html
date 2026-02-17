@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Controle de Gastos</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+   <video id="bg-video" autoplay muted loop></video>
+    
+  <main class="container">
+    <h1>💰 Controle de Gastos</h1>
+
+    <div class="saldo">
+      <p>Saldo atual</p>
+      <h2 id="saldo">R$ 0,00</h2>
+    </div>
+
+    <form class="form" onsubmit="adicionar(event)">
+      <input id="descricao" type="text" placeholder="Descrição" />
+      <input id="valor" type="number" placeholder="Valor (ex: 50)" />
+      
+      <select id="tipo">
+        <option value="entrada">Entrada</option>
+        <option value="saida">Saída</option>
+      </select>
+
+      <button type="submit">Adicionar</button>
+    </form>
+
+    <ul id="lista"></ul>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
