@@ -1,79 +1,81 @@
 const descricaoInput = document.getElementById("descricao");
 const valorInput = document.getElementById("valor");
 const tipoSelect = document.getElementById("tipo");
+const form = document.getElementById("formGastos");
 const lista = document.getElementById("lista");
 const saldoEl = document.getElementById("saldo");
-const bgVideo = document.getElementById("bg-video");
 
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let gastos = JSON.parse(localStorage.getItem("gastos")) || [];
+let saldo = 0;
 
-renderizar();
-iniciarVideo();
+// 👉 Atualiza tela inteira
+function atualizarTela() {
+  lista.innerHTML = "";
+  saldo = 0;
 
-function adicionar(event) {
+  gastos.forEach((item, index) => {
+    const li = document.createElement("li");
+
+    const texto = document.createElement("span");
+    texto.innerText = `${item.descricao} - R$ ${item.valor} (${item.tipo})`;
+
+    const botaoExcluir = document.createElement("button");
+    botaoExcluir.innerText = "🗑️";
+    botaoExcluir.style.marginLeft = "10px";
+
+    botaoExcluir.addEventListener("click", function () {
+      gastos.splice(index, 1);
+      localStorage.setItem("gastos", JSON.stringify(gastos));
+      atualizarTela();
+    });
+
+    li.appendChild(texto);
+    li.appendChild(botaoExcluir);
+    lista.appendChild(li);
+    if (item.tipo === "entrada") {
+  li.classList.add("entrada");
+} else {
+  li.classList.add("saida");
+}
+
+    if (item.tipo === "entrada") {
+      saldo += item.valor;
+    } else {
+      saldo -= item.valor;
+    }
+  });
+
+  saldoEl.innerText = `R$ ${saldo.toFixed(2)}`;
+}
+
+// 👉 Evento do formulário
+form.addEventListener("submit", function (event) {
   event.preventDefault();
 
   const descricao = descricaoInput.value.trim();
   const valor = Number(valorInput.value);
   const tipo = tipoSelect.value;
 
-  if (!descricao || valor <= 0) return;
+  // 🔐 VALIDAÇÃO
+  if (descricao === "" || valor <= 0) {
+    alert("Preencha corretamente descrição e valor.");
+    return;
+  }
 
-  transacoes.push({ descricao, valor, tipo });
-  salvar();
-  renderizar();
+  const novoGasto = {
+    descricao,
+    valor,
+    tipo,
+  };
+
+  gastos.push(novoGasto);
+  localStorage.setItem("gastos", JSON.stringify(gastos));
+
+  atualizarTela();
 
   descricaoInput.value = "";
   valorInput.value = "";
-  tipoSelect.value = "entrada";
-}
+});
 
-function renderizar() {
-  lista.innerHTML = "";
-  let saldo = 0;
-
-  transacoes.forEach((item, index) => {
-    const li = document.createElement("li");
-    const btn = document.createElement("button");
-
-    li.classList.add(item.tipo);
-
-    const valorFormatado = item.valor.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL"
-    });
-
-    if (item.tipo === "entrada") {
-      saldo += item.valor;
-      li.textContent = `➕ ${item.descricao} — ${valorFormatado}`;
-    } else {
-      saldo -= item.valor;
-      li.textContent = `➖ ${item.descricao} — ${valorFormatado}`;
-    }
-
-    btn.textContent = "🗑️";
-    btn.onclick = () => {
-      transacoes.splice(index, 1);
-      salvar();
-      renderizar();
-    };
-
-    li.appendChild(btn);
-    lista.appendChild(li);
-  });
-
-  saldoEl.textContent = saldo.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL"
-  });
-}
-
-function salvar() {
-  localStorage.setItem("transacoes", JSON.stringify(transacoes));
-}
-
-function iniciarVideo() {
-  const videos = ["./Videos/money1.mp4"];
-  const videoAleatorio = Math.floor(Math.random() * videos.length);
-  bgVideo.src = videos[videoAleatorio];
-}
+// 👉 Carrega dados ao abrir
+atualizarTela();
