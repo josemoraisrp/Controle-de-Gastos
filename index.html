@@ -7,7 +7,9 @@
 </head>
 <body>
 
-  <video id="bg-video" autoplay muted loop playsinline></video>
+  <video id="bg-video" autoplay muted loop playsinline>
+  <source src="./Videos/video.mp4" type="video/mp4">
+</video>
 
   <main class="container">
     <h1>💰 Controle de Gastos</h1>
@@ -17,7 +19,8 @@
       <h2 id="saldo">R$ 0,00</h2>
     </div>
 
-    <form class="form" onsubmit="adicionar(event)">
+    <!-- FORMULÁRIO ÚNICO -->
+    <form class="form" id="formGastos">
       <input id="descricao" type="text" placeholder="Descrição" />
       <input id="valor" type="number" placeholder="Valor (ex: 50)" />
 
@@ -26,7 +29,7 @@
         <option value="saida">Saída</option>
       </select>
 
-      <button type="submit">Adicionar</button>
+      <button type="submit" id="btnAdicionar">Adicionar</button>
     </form>
 
     <ul id="lista"></ul>
